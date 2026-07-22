@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Recibo de Sueldo</title>
+    <meta name="description" content="Aplicación para simular recibos de sueldo con detalles de remuneración y descuentos.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=2">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <h1>Simulador Sueldo</h1>
+        </div>
+        <div class="nav-links">
+            <button id="nav-general" class="nav-btn active">General</button>
+            <button id="nav-escalas" class="nav-btn">Escalas</button>
+            <button id="nav-admin" class="nav-btn">Administrador</button>
+        </div>
+    </nav>
+
+    <main class="container">
+        <!-- VISTA GENERAL -->
+        <div id="view-general" class="view active">
+            <!-- Disclaimer Banner -->
+            <div class="disclaimer-banner">
+                <strong>Aviso:</strong> Esta es una simulación y no es oficial, sino una aproximación de la liquidación. No se tiene en cuenta el Impuesto a las Ganancias en los descuentos.
+            </div>
+
+            <!-- Módulo de Datos (Ancho completo) -->
+            <section class="module full-width" id="module-datos">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem;">
+                    <h2 style="margin-bottom: 0; border-bottom: none; padding-bottom: 0;">Datos</h2>
+                    <button id="btn-limpiar" class="btn-secondary">Limpiar Datos</button>
+                </div>
+                <div class="datos-grid">
+                    <div class="input-group">
+                        <label for="categoria">Categoría</label>
+                        <select id="categoria">
+                            <!-- Options populated via JS -->
+                        </select>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="valor-modulo">Valor del Módulo</label>
+                        <input type="number" id="valor-modulo" placeholder="Definido por Admin" readonly class="readonly-input">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="antiguedad">Años de Antigüedad</label>
+                        <input type="number" id="antiguedad" placeholder="Ej. 5" min="0" max="50" step="1">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="titulo">Título</label>
+                        <select id="titulo">
+                            <option value="ninguno">Ninguno</option>
+                            <option value="uni_5">1. Universitario/Superior (5+ años)</option>
+                            <option value="uni_4">2. Universitario/Superior (4 años)</option>
+                            <option value="uni_3">3. Universitario/Superior (1 a 3 años)</option>
+                            <option value="sec_5">4. Secundario/Polimodal (5+ años)</option>
+                            <option value="sec_3">5. Secundario Ciclo Básico (3 años)</option>
+                            <option value="cert_3">6. Certificados (Más de 3 meses)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="presentismo">R-Premio Asistencia</label>
+                        <select id="presentismo">
+                            <option value="si">Sí, Completo</option>
+                            <option value="si60">Sí, Incompleto</option>
+                            <option value="no" selected>No</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="permanencia">Permanencia en Categoría</label>
+                        <select id="permanencia">
+                            <option value="0">Menos de 2 años</option>
+                            <option value="2">2 a 3 años</option>
+                            <option value="4">4 a 5 años</option>
+                            <option value="6">6 a 7 años</option>
+                            <option value="8">8 años o más</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="adicional-funcion">Adicional por Función</label>
+                        <select id="adicional-funcion">
+                            <option value="no" selected>No</option>
+                            <option value="si">Sí</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="das-familiar">D.A.S. Familiares (Cant.)</label>
+                        <input type="number" id="das-familiar" placeholder="Ej. 2" min="0" step="1">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="comida-dias">Días de Comida</label>
+                        <input type="number" id="comida-dias" placeholder="Ej. 10" min="0" step="1">
+                    </div>
+
+                    <div class="input-group" style="grid-column: 1 / -1;">
+                        <label style="margin-bottom: 0.5rem;">Sindicato</label>
+                        <div class="checkbox-group" id="sindicato-group">
+                            <label class="custom-checkbox">
+                                <input type="checkbox" value="apl">
+                                <span>APL (2%)</span>
+                            </label>
+                            <label class="custom-checkbox">
+                                <input type="checkbox" value="ate">
+                                <span>ATE (2.5%)</span>
+                            </label>
+                            <label class="custom-checkbox">
+                                <input type="checkbox" value="upcn">
+                                <span>UPCN (3%)</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Contenedor central (Remuneración y Descuentos) -->
+            <div class="split-modules">
+                <!-- Módulo de Remuneración -->
+                <section class="module" id="module-remuneracion">
+                    <h2>Remuneración</h2>
+                    <ul class="concept-list" id="list-remuneracion">
+                        <!-- Conceptos populated via JS -->
+                        <li class="empty-state">Ingrese los datos para iniciar el cálculo.</li>
+                    </ul>
+                    <div class="subtotal">
+                        <span>Subtotal Remunerativo</span>
+                        <span id="subtotal-remunerativo">$ 0.00</span>
+                    </div>
+                </section>
+
+                <!-- Módulo de Descuentos -->
+                <section class="module" id="module-descuentos">
+                    <h2>Descuentos</h2>
+                    <ul class="concept-list" id="list-descuentos">
+                        <!-- Descuentos populated via JS -->
+                        <li class="empty-state">Ingrese los datos para iniciar el cálculo.</li>
+                    </ul>
+                    <div class="subtotal">
+                        <span>Subtotal Descuentos</span>
+                        <span id="subtotal-descuentos">$ 0.00</span>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Módulo Total (Ancho completo) -->
+            <section class="module full-width module-total" id="module-total">
+                <div class="total-content">
+                    <h2>Sueldo Neto a Cobrar</h2>
+                    <span class="total-amount" id="total-neto">$ 0.00</span>
+                </div>
+            </section>
+        </div>
+
+        <!-- VISTA ESCALAS -->
+        <div id="view-escalas" class="view">
+            <section class="module full-width">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                    <h2 style="margin-bottom: 0; border-bottom: none;">Escalas Salariales</h2>
+                    <div class="input-group" style="min-width: 250px;">
+                        <select id="select-mes-escala">
+                            <!-- Populated via JS -->
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="table-container" style="overflow-x: auto;">
+                    <table class="escala-table">
+                        <thead>
+                            <tr>
+                                <th rowspan="2" style="vertical-align: middle;">Cat.</th>
+                                <th rowspan="2" style="vertical-align: middle;">Sdo. Básico</th>
+                                <th rowspan="2" style="vertical-align: middle;">D. Funcional</th>
+                                <th colspan="2" style="text-align: center; border-bottom: none;">Adic. Capacitación</th>
+                                <th colspan="2" style="text-align: center; border-bottom: none;">RC 02/2023</th>
+                                <th colspan="2" style="text-align: center; border-bottom: none;">Adic. Readec. Escal.</th>
+                                <th rowspan="2" style="vertical-align: middle;">TOTAL BRUTO</th>
+                            </tr>
+                            <tr>
+                                <th style="text-align: center; font-size: 0.75rem;">Mód.</th>
+                                <th style="text-align: right; font-size: 0.75rem;">$</th>
+                                <th style="text-align: center; font-size: 0.75rem;">Mód.</th>
+                                <th style="text-align: right; font-size: 0.75rem;">$</th>
+                                <th style="text-align: center; font-size: 0.75rem;">Mód.</th>
+                                <th style="text-align: right; font-size: 0.75rem;">$</th>
+                            </tr>
+                        </thead>
+                        <tbody id="escala-tbody">
+                            <!-- Rows populated via JS -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.85rem;">
+                    <strong>Valor Módulo del mes:</strong> <span id="escala-valor-modulo" style="color: var(--accent-color); font-weight: bold;">$ 0.00</span> | 
+                    Valores correspondientes a Sueldo Bruto. No incluye antigüedad, títulos ni presentismo.
+                </div>
+            </section>
+        </div>
+
+        <!-- VISTA ADMINISTRADOR -->
+        <div id="view-admin" class="view">
+            <section class="module full-width">
+                <h2>Panel de Administrador</h2>
+                <p>En este panel podrás gestionar los parámetros de cálculo para los datos ingresados en la pantalla General.</p>
+                
+                <div class="admin-config-grid">
+                    <!-- Valor del Módulo -->
+                    <div class="admin-card">
+                        <h3>Valor del Módulo</h3>
+                        <p>Valor base que se multiplica por la categoría.</p>
+                        <div class="input-group" style="margin-top: 1rem;">
+                            <input type="number" id="admin-valor-modulo" placeholder="Ej. 1000" min="0" step="any">
+                        </div>
+                    </div>
+
+                    <!-- Antigüedad -->
+                    <div class="admin-card">
+                        <h3>Antigüedad (Módulos/año)</h3>
+                        <p>Unidades de módulo por cada año de servicio.</p>
+                        <div class="input-group" style="margin-top: 1rem;">
+                            <input type="number" id="admin-antiguedad" placeholder="Ej. 6.6" min="0" step="any">
+                        </div>
+                    </div>
+
+                    <!-- Presentismo -->
+                    <div class="admin-card">
+                        <h3>R-Premio Asistencia (Módulos)</h3>
+                        <p>Cantidad de módulos para el premio.</p>
+                        <div class="input-group" style="margin-top: 1rem; gap: 0.5rem;">
+                            <label>Sí, Completo</label>
+                            <input type="number" id="admin-pres-si" placeholder="Ej. 100" min="0" step="any">
+                            <label>Sí, Incompleto</label>
+                            <input type="number" id="admin-pres-si60" placeholder="Ej. 60" min="0" step="any">
+                        </div>
+                    </div>
+
+                    <!-- RC 02/2023 -->
+                    <div class="admin-card">
+                        <h3>RC 02/2023 (Módulos)</h3>
+                        <p>Módulos para RC 02/2023.</p>
+                        <div class="input-group" style="margin-top: 1rem;">
+                            <input type="number" id="admin-rc022023" placeholder="Ej. 85.141" min="0" step="any">
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem; text-align: right;">
+                    <button class="btn-primary" id="btn-save-admin">Guardar Configuraciones</button>
+                    <span id="admin-save-msg" style="color: var(--success-color); margin-left: 1rem; opacity: 0; transition: opacity 0.3s;">¡Guardado exitosamente!</span>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
