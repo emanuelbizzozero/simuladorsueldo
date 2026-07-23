@@ -203,8 +203,19 @@ function init() {
     });
 
     // Add Column Logic
-    document.getElementById('btn-add-column')?.addEventListener('click', () => {
-        const colName = prompt("Ingrese el nombre de la nueva columna (Ej: Bono Especial)");
+    document.getElementById('btn-add-column')?.addEventListener('click', async () => {
+        const { value: colName } = await Swal.fire({
+            title: "Nueva Columna",
+            input: "text",
+            inputLabel: "Ingrese el nombre (Ej: Bono Especial)",
+            showCancelButton: true,
+            confirmButtonText: "Agregar",
+            cancelButtonText: "Cancelar",
+            background: 'var(--bg-secondary)',
+            color: 'var(--text-primary)',
+            confirmButtonColor: 'var(--accent-neon-cyan)'
+        });
+        
         if (colName) {
             config.dynamicColumns.push({
                 id: 'col_' + Date.now(),
@@ -218,16 +229,45 @@ function init() {
     });
 
     // Add Scale Logic
-    document.getElementById('btn-add-scale')?.addEventListener('click', () => {
-        const mesName = prompt("Ingrese el mes y año (Ej: Septiembre 2026)");
+    document.getElementById('btn-add-scale')?.addEventListener('click', async () => {
+        const { value: mesName } = await Swal.fire({
+            title: "Nuevo Aumento",
+            input: "text",
+            inputLabel: "Ingrese el mes y año (Ej: Septiembre 2026)",
+            showCancelButton: true,
+            confirmButtonText: "Siguiente",
+            cancelButtonText: "Cancelar",
+            background: 'var(--bg-secondary)',
+            color: 'var(--text-primary)',
+            confirmButtonColor: 'var(--accent-neon-cyan)'
+        });
+        
         if (mesName) {
+            const { value: pctInput } = await Swal.fire({
+                title: "Porcentaje de Aumento",
+                input: "text",
+                inputLabel: "Ej: 5 o 5.5 (0 si no hay aumento)",
+                inputValue: "0",
+                showCancelButton: true,
+                confirmButtonText: "Agregar",
+                cancelButtonText: "Cancelar",
+                background: 'var(--bg-secondary)',
+                color: 'var(--text-primary)',
+                confirmButtonColor: 'var(--accent-neon-cyan)'
+            });
+            const pctValue = parseFloat((pctInput || "0").replace(',', '.')) || 0;
+            
             // Get values from the last scale or defaults
             const lastScale = config.escalasHistoricas.length > 0 ? config.escalasHistoricas[config.escalasHistoricas.length - 1] : null;
+            
+            const lastModulo = lastScale ? parseFloat(lastScale.valorModulo) : parseFloat(config.valorModulo);
+            const nuevoModulo = lastModulo * (1 + (pctValue / 100));
+
             config.escalasHistoricas.push({
                 id: 'esc_' + Date.now(),
                 mes: mesName,
-                porcentaje: "0%",
-                valorModulo: lastScale ? lastScale.valorModulo : config.valorModulo,
+                porcentaje: pctValue > 0 ? `${pctValue}%` : "0%",
+                valorModulo: parseFloat(nuevoModulo.toFixed(7)),
                 presentismo: lastScale ? lastScale.presentismo : 100,
                 antiguedad: lastScale ? lastScale.antiguedad : 6.6
             });
@@ -237,13 +277,45 @@ function init() {
         }
     });
 
-    // Sidebar Toggle Logic
-    const sidebarToggleBtn = document.getElementById('sidebar-toggle');
-    const sidebar = document.querySelector('.sidebar');
-    
-    if (sidebarToggleBtn && sidebar) {
-        sidebarToggleBtn.addEventListener('click', () => {
-            sidebar.classList.toggle('collapsed');
+    // Hidden Admin Access (Secret double click + Password)
+    const headerTitle = document.querySelector('.header-logo');
+    if (headerTitle) {
+        headerTitle.addEventListener('dblclick', async () => {
+            const adminBtn = document.getElementById('nav-admin');
+            if (adminBtn) {
+                if (adminBtn.style.display === 'none') {
+                    const { value: pass } = await Swal.fire({
+                        title: 'Acceso Restringido',
+                        input: 'password',
+                        inputLabel: 'Ingrese la contraseña:',
+                        showCancelButton: true,
+                        confirmButtonText: "Entrar",
+                        cancelButtonText: "Cancelar",
+                        background: 'var(--bg-secondary)',
+                        color: 'var(--text-primary)',
+                        confirmButtonColor: 'var(--accent-neon-cyan)'
+                    });
+                    
+                    if (pass === "1234aaaa") {
+                        adminBtn.style.display = 'flex';
+                    } else if (pass) {
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'Contraseña incorrecta',
+                            icon: 'error',
+                            background: 'var(--bg-secondary)',
+                            color: 'var(--text-primary)',
+                            confirmButtonColor: 'var(--accent-neon-cyan)'
+                        });
+                    }
+                } else {
+                    adminBtn.style.display = 'none';
+                    // Si el admin está activo y lo ocultamos, volvemos a la vista general
+                    if (adminBtn.classList.contains('active')) {
+                        document.getElementById('nav-general').click();
+                    }
+                }
+            }
         });
     }
 
@@ -586,9 +658,21 @@ function renderAdminDynamicTable() {
     });
     
     thead.querySelectorAll('.btn-delete-col').forEach(btn => {
-        btn.addEventListener('click', (e) => {
+        btn.addEventListener('click', async (e) => {
             const index = e.target.getAttribute('data-index');
-            if (confirm(`¿Eliminar la columna "${config.dynamicColumns[index].name}"?`)) {
+            const result = await Swal.fire({
+                title: '¿Eliminar columna?',
+                text: `¿Eliminar la columna "${config.dynamicColumns[index].name}"?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ff4444',
+                cancelButtonColor: 'var(--bg-tertiary)',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar',
+                background: 'var(--bg-secondary)',
+                color: 'var(--text-primary)'
+            });
+            if (result.isConfirmed) {
                 config.dynamicColumns.splice(index, 1);
                 renderAdminDynamicTable();
                 renderEscala();
@@ -650,9 +734,21 @@ function renderAdminScalesTable() {
     });
 
     table.querySelectorAll('.btn-delete-escala').forEach(btn => {
-        btn.addEventListener('click', (e) => {
+        btn.addEventListener('click', async (e) => {
             const index = e.target.getAttribute('data-index');
-            if (confirm(`¿Seguro que deseas eliminar la escala de "${config.escalasHistoricas[index].mes}"?`)) {
+            const result = await Swal.fire({
+                title: '¿Eliminar escala?',
+                text: `¿Seguro que deseas eliminar la escala de "${config.escalasHistoricas[index].mes}"?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ff4444',
+                cancelButtonColor: 'var(--bg-tertiary)',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar',
+                background: 'var(--bg-secondary)',
+                color: 'var(--text-primary)'
+            });
+            if (result.isConfirmed) {
                 config.escalasHistoricas.splice(index, 1);
                 renderAdminScalesTable();
                 updateEscalasDropdown();

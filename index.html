@@ -6,37 +6,30 @@
     <title>Simulador de Recibo de Sueldo</title>
     <meta name="description" content="Aplicación para simular recibos de sueldo con detalles de remuneración y descuentos.">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=22">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="styles.css?v=28">
 </head>
 <body>
     <div class="dashboard-container">
-        <!-- SIDEBAR NAVIGATION -->
-        <aside class="sidebar">
-            <button id="sidebar-toggle" class="sidebar-toggle-edge">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="chevron-icon"><polyline points="15 18 9 12 15 6"></polyline></svg>
-            </button>
-            <div class="sidebar-header">
+        <!-- TOP HEADER -->
+        <header class="top-header">
+            <div class="header-logo">
                 <div class="logo-icon">S</div>
-                <h1 class="sidebar-title">Simulador Sueldo</h1>
+                <h1 class="header-title">Simulador Sueldo</h1>
             </div>
             <nav class="nav-links">
                 <button id="nav-general" class="nav-btn active">
-                    <span class="nav-icon">📊</span>
                     <span class="nav-text">General</span>
                 </button>
                 <button id="nav-escalas" class="nav-btn">
-                    <span class="nav-icon">📈</span>
                     <span class="nav-text">Escalas</span>
                 </button>
-                <button id="nav-admin" class="nav-btn">
-                    <span class="nav-icon">⚙️</span>
+                <!-- Hidden Admin Button -->
+                <button id="nav-admin" class="nav-btn" style="display: none;">
                     <span class="nav-text">Administrador</span>
                 </button>
             </nav>
-            <div class="sidebar-footer">
-                <p>Versión 2.0</p>
-            </div>
-        </aside>
+        </header>
 
         <!-- MAIN CONTENT AREA -->
         <main class="main-content">
@@ -391,6 +384,6 @@
     </main>
     </div>
 
-    <script src="app.js?v=21"></script>
+    <script src="app.js?v=29"></script>
 </body>
 </html>
