@@ -6,23 +6,42 @@
     <title>Simulador de Recibo de Sueldo</title>
     <meta name="description" content="Aplicación para simular recibos de sueldo con detalles de remuneración y descuentos.">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=2">
+    <link rel="stylesheet" href="styles.css?v=22">
 </head>
 <body>
-    <nav class="navbar">
-        <div class="logo">
-            <h1>Simulador Sueldo</h1>
-        </div>
-        <div class="nav-links">
-            <button id="nav-general" class="nav-btn active">General</button>
-            <button id="nav-escalas" class="nav-btn">Escalas</button>
-            <button id="nav-admin" class="nav-btn">Administrador</button>
-        </div>
-    </nav>
+    <div class="dashboard-container">
+        <!-- SIDEBAR NAVIGATION -->
+        <aside class="sidebar">
+            <button id="sidebar-toggle" class="sidebar-toggle-edge">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="chevron-icon"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            </button>
+            <div class="sidebar-header">
+                <div class="logo-icon">S</div>
+                <h1 class="sidebar-title">Simulador Sueldo</h1>
+            </div>
+            <nav class="nav-links">
+                <button id="nav-general" class="nav-btn active">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-text">General</span>
+                </button>
+                <button id="nav-escalas" class="nav-btn">
+                    <span class="nav-icon">📈</span>
+                    <span class="nav-text">Escalas</span>
+                </button>
+                <button id="nav-admin" class="nav-btn">
+                    <span class="nav-icon">⚙️</span>
+                    <span class="nav-text">Administrador</span>
+                </button>
+            </nav>
+            <div class="sidebar-footer">
+                <p>Versión 2.0</p>
+            </div>
+        </aside>
 
-    <main class="container">
-        <!-- VISTA GENERAL -->
-        <div id="view-general" class="view active">
+        <!-- MAIN CONTENT AREA -->
+        <main class="main-content">
+            <!-- VISTA GENERAL -->
+            <div id="view-general" class="view active">
             <!-- Disclaimer Banner -->
             <div class="disclaimer-banner">
                 <strong>Aviso:</strong> Esta es una simulación y no es oficial, sino una aproximación de la liquidación. No se tiene en cuenta el Impuesto a las Ganancias en los descuentos.
@@ -103,7 +122,7 @@
                         <input type="number" id="comida-dias" placeholder="Ej. 10" min="0" step="1">
                     </div>
 
-                    <div class="input-group" style="grid-column: 1 / -1;">
+                    <div class="input-group" style="grid-column: span 3;">
                         <label style="margin-bottom: 0.5rem;">Sindicato</label>
                         <div class="checkbox-group" id="sindicato-group">
                             <label class="custom-checkbox">
@@ -153,11 +172,9 @@
             </div>
 
             <!-- Módulo Total (Ancho completo) -->
-            <section class="module full-width module-total" id="module-total">
-                <div class="total-content">
-                    <h2>Sueldo Neto a Cobrar</h2>
-                    <span class="total-amount" id="total-neto">$ 0.00</span>
-                </div>
+            <section class="net-salary-card" id="module-total">
+                <h3>Sueldo Neto a Cobrar</h3>
+                <div class="net-salary-amount" id="total-neto">$ 0.00</div>
             </section>
         </div>
 
@@ -172,27 +189,19 @@
                         </select>
                     </div>
                 </div>
+
+                <div style="background: linear-gradient(90deg, rgba(0, 242, 254, 0.05), transparent); border-left: 3px solid var(--accent-neon-cyan); padding: 0.75rem 1rem; margin-bottom: 1.5rem; font-size: 0.9rem; color: var(--text-primary); border-radius: 4px 8px 8px 4px;">
+                    <strong>Valor Módulo del mes:</strong> <span id="escala-valor-modulo" style="color: var(--accent-neon-cyan); font-weight: bold;">$ 0.00</span> | 
+                    Valores correspondientes a Sueldo Bruto. No incluye antigüedad, títulos ni presentismo.<br>
+                    <span style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.25rem; display: inline-block;">
+                        <em>* Valor Presentismo: <strong id="escala-valor-presentismo" style="color: var(--text-primary);">$ 0.00</strong> | * Valor Antigüedad: <strong id="escala-valor-antiguedad" style="color: var(--text-primary);">$ 0.00</strong> (Por cada año). La tabla no incluye los descuentos.</em>
+                    </span>
+                </div>
                 
-                <div class="table-container" style="overflow-x: auto;">
-                    <table class="escala-table">
-                        <thead>
-                            <tr>
-                                <th rowspan="2" style="vertical-align: middle;">Cat.</th>
-                                <th rowspan="2" style="vertical-align: middle;">Sdo. Básico</th>
-                                <th rowspan="2" style="vertical-align: middle;">D. Funcional</th>
-                                <th colspan="2" style="text-align: center; border-bottom: none;">Adic. Capacitación</th>
-                                <th colspan="2" style="text-align: center; border-bottom: none;">RC 02/2023</th>
-                                <th colspan="2" style="text-align: center; border-bottom: none;">Adic. Readec. Escal.</th>
-                                <th rowspan="2" style="vertical-align: middle;">TOTAL BRUTO</th>
-                            </tr>
-                            <tr>
-                                <th style="text-align: center; font-size: 0.75rem;">Mód.</th>
-                                <th style="text-align: right; font-size: 0.75rem;">$</th>
-                                <th style="text-align: center; font-size: 0.75rem;">Mód.</th>
-                                <th style="text-align: right; font-size: 0.75rem;">$</th>
-                                <th style="text-align: center; font-size: 0.75rem;">Mód.</th>
-                                <th style="text-align: right; font-size: 0.75rem;">$</th>
-                            </tr>
+                <div class="table-container" style="overflow-x: auto; background: linear-gradient(90deg, rgba(0, 242, 254, 0.02), rgba(0, 0, 0, 0.1)); border: 1px solid rgba(255, 255, 255, 0.05); border-left: 3px solid rgba(0, 242, 254, 0.3); border-radius: 4px 8px 8px 4px; padding: 1rem;">
+                    <table class="escala-table" id="main-escala-table">
+                        <thead id="main-escala-thead">
+                            <!-- Populated via JS dynamically -->
                         </thead>
                         <tbody id="escala-tbody">
                             <!-- Rows populated via JS -->
@@ -200,10 +209,6 @@
                     </table>
                 </div>
                 
-                <div style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.85rem;">
-                    <strong>Valor Módulo del mes:</strong> <span id="escala-valor-modulo" style="color: var(--accent-color); font-weight: bold;">$ 0.00</span> | 
-                    Valores correspondientes a Sueldo Bruto. No incluye antigüedad, títulos ni presentismo.
-                </div>
             </section>
         </div>
 
@@ -213,45 +218,168 @@
                 <h2>Panel de Administrador</h2>
                 <p>En este panel podrás gestionar los parámetros de cálculo para los datos ingresados en la pantalla General.</p>
                 
-                <div class="admin-config-grid">
-                    <!-- Valor del Módulo -->
-                    <div class="admin-card">
-                        <h3>Valor del Módulo</h3>
-                        <p>Valor base que se multiplica por la categoría.</p>
-                        <div class="input-group" style="margin-top: 1rem;">
-                            <input type="number" id="admin-valor-modulo" placeholder="Ej. 1000" min="0" step="any">
+                <div class="admin-sections">
+                    <!-- Parámetros Generales -->
+                    <details open class="admin-details">
+                        <summary>Parámetros Generales</summary>
+                        <div class="admin-config-grid">
+                            <div class="admin-card">
+                                <h3>Valor del Módulo</h3>
+                                <div class="input-group" style="margin-top: 1rem;">
+                                    <input type="number" id="admin-valor-modulo" step="any">
+                                </div>
+                            </div>
+                            <div class="admin-card">
+                                <h3>Sueldo Básico (%)</h3>
+                                <div class="input-group" style="margin-top: 1rem;">
+                                    <input type="number" id="admin-sueldo-basico-pct" step="any">
+                                </div>
+                            </div>
+                            <div class="admin-card">
+                                <h3>Dedicación Funcional (%)</h3>
+                                <div class="input-group" style="margin-top: 1rem;">
+                                    <input type="number" id="admin-dedicacion-func-pct" step="any">
+                                </div>
+                            </div>
+                            <div class="admin-card">
+                                <h3>Antigüedad (Módulos/año)</h3>
+                                <div class="input-group" style="margin-top: 1rem;">
+                                    <input type="number" id="admin-antiguedad" step="any">
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    </details>
 
-                    <!-- Antigüedad -->
-                    <div class="admin-card">
-                        <h3>Antigüedad (Módulos/año)</h3>
-                        <p>Unidades de módulo por cada año de servicio.</p>
-                        <div class="input-group" style="margin-top: 1rem;">
-                            <input type="number" id="admin-antiguedad" placeholder="Ej. 6.6" min="0" step="any">
+                    <!-- Retenciones y Sindicatos -->
+                    <details class="admin-details">
+                        <summary>Retenciones y Sindicatos (%)</summary>
+                        <div class="admin-config-grid">
+                            <div class="admin-card">
+                                <h3>Aporte Jubilatorio (%)</h3>
+                                <div class="input-group" style="margin-top: 1rem;"><input type="number" id="admin-desc-jubilacion" step="any"></div>
+                            </div>
+                            <div class="admin-card">
+                                <h3>Ley 19.032 (%)</h3>
+                                <div class="input-group" style="margin-top: 1rem;"><input type="number" id="admin-desc-ley19032" step="any"></div>
+                            </div>
+                            <div class="admin-card">
+                                <h3>Obra Social Titular (%)</h3>
+                                <div class="input-group" style="margin-top: 1rem;"><input type="number" id="admin-desc-os-titular" step="any"></div>
+                            </div>
+                            <div class="admin-card">
+                                <h3>Fondo Trasplante (%)</h3>
+                                <div class="input-group" style="margin-top: 1rem;"><input type="number" id="admin-desc-os-fdo" step="any"></div>
+                            </div>
+                            <div class="admin-card">
+                                <h3>Seguro Sepelio (%)</h3>
+                                <div class="input-group" style="margin-top: 1rem;"><input type="number" id="admin-desc-sepelio" step="any"></div>
+                            </div>
+                            <div class="admin-card">
+                                <h3>Sindicato APL (%)</h3>
+                                <div class="input-group" style="margin-top: 1rem;"><input type="number" id="admin-sind-apl" step="any"></div>
+                            </div>
+                            <div class="admin-card">
+                                <h3>Sindicato ATE (%)</h3>
+                                <div class="input-group" style="margin-top: 1rem;"><input type="number" id="admin-sind-ate" step="any"></div>
+                            </div>
+                            <div class="admin-card">
+                                <h3>Sindicato UPCN (%)</h3>
+                                <div class="input-group" style="margin-top: 1rem;"><input type="number" id="admin-sind-upcn" step="any"></div>
+                            </div>
                         </div>
-                    </div>
+                    </details>
 
-                    <!-- Presentismo -->
-                    <div class="admin-card">
-                        <h3>R-Premio Asistencia (Módulos)</h3>
-                        <p>Cantidad de módulos para el premio.</p>
-                        <div class="input-group" style="margin-top: 1rem; gap: 0.5rem;">
-                            <label>Sí, Completo</label>
-                            <input type="number" id="admin-pres-si" placeholder="Ej. 100" min="0" step="any">
-                            <label>Sí, Incompleto</label>
-                            <input type="number" id="admin-pres-si60" placeholder="Ej. 60" min="0" step="any">
+                    <!-- Gestión de Aumentos (Escalas) -->
+                    <details class="admin-details" open>
+                        <summary>Gestión de Aumentos y Publicación (Escalas Históricas)</summary>
+                        <div style="margin-bottom: 1rem; display: flex; justify-content: flex-end;">
+                            <button id="btn-add-scale" class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">+ Agregar Nuevo Aumento</button>
                         </div>
-                    </div>
+                        <div class="table-container" style="overflow-x: auto; background: linear-gradient(90deg, rgba(0, 242, 254, 0.02), rgba(0, 0, 0, 0.1)); border: 1px solid rgba(255, 255, 255, 0.05); border-left: 3px solid rgba(0, 242, 254, 0.3); border-radius: 4px; padding: 1rem;">
+                            <table class="escala-table" id="admin-scales-table">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align: left;">Mes / Año</th>
+                                        <th>Porcentaje</th>
+                                        <th>Valor Módulo</th>
+                                        <th>Módulos Presentismo</th>
+                                        <th>Módulos Antigüedad</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Populated via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </details>
 
-                    <!-- RC 02/2023 -->
-                    <div class="admin-card">
-                        <h3>RC 02/2023 (Módulos)</h3>
-                        <p>Módulos para RC 02/2023.</p>
-                        <div class="input-group" style="margin-top: 1rem;">
-                            <input type="number" id="admin-rc022023" placeholder="Ej. 85.141" min="0" step="any">
+                    <!-- Gestión de Escalas Dinámicas -->
+                    <details class="admin-details" open>
+                        <summary>Gestión de Escalas y Columnas (Módulos por Categoría)</summary>
+                        <div style="margin-bottom: 1rem; display: flex; justify-content: flex-end;">
+                            <button id="btn-add-column" class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">+ Agregar Columna</button>
                         </div>
-                    </div>
+                        <div class="table-container" style="overflow-x: auto; background: linear-gradient(90deg, rgba(0, 242, 254, 0.02), rgba(0, 0, 0, 0.1)); border: 1px solid rgba(255, 255, 255, 0.05); border-left: 3px solid rgba(0, 242, 254, 0.3); border-radius: 4px; padding: 1rem;">
+                            <table class="escala-table" id="admin-dynamic-table">
+                                <thead>
+                                    <!-- Populated via JS -->
+                                </thead>
+                                <tbody>
+                                    <!-- Populated via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </details>
+
+                    <!-- Premios y Adicionales -->
+                    <details class="admin-details">
+                        <summary>Premios y Adicionales</summary>
+                        <div class="admin-config-grid">
+
+                            <div class="admin-card">
+                            <h3>Premio Asist. Completo (Módulos)</h3>
+                            <div class="input-group" style="margin-top: 1rem;">
+                                <input type="number" id="admin-pres-si" step="any">
+                            </div>
+                        </div>
+                        <div class="admin-card">
+                            <h3>Premio Asist. Incompleto (Módulos)</h3>
+                            <div class="input-group" style="margin-top: 1rem;">
+                                <input type="number" id="admin-pres-si60" step="any">
+                            </div>
+                        </div>
+                            <div class="admin-card">
+                                <h3>Adicional Función (%)</h3>
+                                <div class="input-group" style="margin-top: 1rem;"><input type="number" id="admin-adic-funcion-pct" step="any"></div>
+                            </div>
+                            <div class="admin-card">
+                                <h3>Comida (Porcentaje Cat 9)</h3>
+                                <div class="input-group" style="margin-top: 1rem;"><input type="number" id="admin-comida-pct" step="any"></div>
+                            </div>
+                        </div>
+                    </details>
+                    
+                    <!-- Valores Base por Categoría -->
+                    <details class="admin-details">
+                        <summary>Valores Base por Categoría</summary>
+                        <div class="admin-config-grid">
+                            <div class="admin-card"><h3>Categoría Nº 1</h3><div class="input-group" style="margin-top: 1rem;"><input type="number" id="admin-cat-1" step="any"></div></div>
+                            <div class="admin-card"><h3>Categoría Nº 2</h3><div class="input-group" style="margin-top: 1rem;"><input type="number" id="admin-cat-2" step="any"></div></div>
+                            <div class="admin-card"><h3>Categoría Nº 3</h3><div class="input-group" style="margin-top: 1rem;"><input type="number" id="admin-cat-3" step="any"></div></div>
+                            <div class="admin-card"><h3>Categoría Nº 4</h3><div class="input-group" style="margin-top: 1rem;"><input type="number" id="admin-cat-4" step="any"></div></div>
+                            <div class="admin-card"><h3>Categoría Nº 5</h3><div class="input-group" style="margin-top: 1rem;"><input type="number" id="admin-cat-5" step="any"></div></div>
+                            <div class="admin-card"><h3>Categoría Nº 6</h3><div class="input-group" style="margin-top: 1rem;"><input type="number" id="admin-cat-6" step="any"></div></div>
+                            <div class="admin-card"><h3>Categoría Nº 7</h3><div class="input-group" style="margin-top: 1rem;"><input type="number" id="admin-cat-7" step="any"></div></div>
+                            <div class="admin-card"><h3>Categoría Nº 8</h3><div class="input-group" style="margin-top: 1rem;"><input type="number" id="admin-cat-8" step="any"></div></div>
+                            <div class="admin-card"><h3>Categoría Nº 9</h3><div class="input-group" style="margin-top: 1rem;"><input type="number" id="admin-cat-9" step="any"></div></div>
+                            <div class="admin-card"><h3>Categoría Nº 10</h3><div class="input-group" style="margin-top: 1rem;"><input type="number" id="admin-cat-10" step="any"></div></div>
+                            <div class="admin-card"><h3>Categoría Nº 11</h3><div class="input-group" style="margin-top: 1rem;"><input type="number" id="admin-cat-11" step="any"></div></div>
+                            <div class="admin-card"><h3>Categoría Nº 12</h3><div class="input-group" style="margin-top: 1rem;"><input type="number" id="admin-cat-12" step="any"></div></div>
+                            <div class="admin-card"><h3>Categoría Nº 13</h3><div class="input-group" style="margin-top: 1rem;"><input type="number" id="admin-cat-13" step="any"></div></div>
+                            <div class="admin-card"><h3>Categoría Nº 14</h3><div class="input-group" style="margin-top: 1rem;"><input type="number" id="admin-cat-14" step="any"></div></div>
+                        </div>
+                    </details>
                 </div>
 
                 <div style="margin-top: 2rem; text-align: right;">
@@ -261,7 +389,8 @@
             </section>
         </div>
     </main>
+    </div>
 
-    <script src="app.js"></script>
+    <script src="app.js?v=21"></script>
 </body>
 </html>
