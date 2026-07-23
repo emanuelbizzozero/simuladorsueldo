@@ -7,7 +7,7 @@
     <meta name="description" content="Aplicación para simular recibos de sueldo con detalles de remuneración y descuentos.">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link rel="stylesheet" href="styles.css?v=28">
+    <link rel="stylesheet" href="styles.css?v=34">
 </head>
 <body>
     <div class="dashboard-container">
@@ -49,7 +49,7 @@
                 <div class="datos-grid">
                     <div class="input-group">
                         <label for="categoria">Categoría</label>
-                        <select id="categoria">
+                        <select id="categoria" required>
                             <!-- Options populated via JS -->
                         </select>
                     </div>
@@ -66,7 +66,8 @@
                     
                     <div class="input-group">
                         <label for="titulo">Título</label>
-                        <select id="titulo">
+                        <select id="titulo" required>
+                            <option value="" disabled selected hidden>Seleccionar</option>
                             <option value="ninguno">Ninguno</option>
                             <option value="uni_5">1. Universitario/Superior (5+ años)</option>
                             <option value="uni_4">2. Universitario/Superior (4 años)</option>
@@ -79,16 +80,18 @@
                     
                     <div class="input-group">
                         <label for="presentismo">R-Premio Asistencia</label>
-                        <select id="presentismo">
+                        <select id="presentismo" required>
+                            <option value="" disabled selected hidden>Seleccionar</option>
                             <option value="si">Sí, Completo</option>
                             <option value="si60">Sí, Incompleto</option>
-                            <option value="no" selected>No</option>
+                            <option value="no">No</option>
                         </select>
                     </div>
 
                     <div class="input-group">
                         <label for="permanencia">Permanencia en Categoría</label>
-                        <select id="permanencia">
+                        <select id="permanencia" required>
+                            <option value="" disabled selected hidden>Seleccionar</option>
                             <option value="0">Menos de 2 años</option>
                             <option value="2">2 a 3 años</option>
                             <option value="4">4 a 5 años</option>
@@ -99,8 +102,9 @@
 
                     <div class="input-group">
                         <label for="adicional-funcion">Adicional por Función</label>
-                        <select id="adicional-funcion">
-                            <option value="no" selected>No</option>
+                        <select id="adicional-funcion" required>
+                            <option value="" disabled selected hidden>Seleccionar</option>
+                            <option value="no">No</option>
                             <option value="si">Sí</option>
                         </select>
                     </div>
@@ -384,6 +388,6 @@
     </main>
     </div>
 
-    <script src="app.js?v=29"></script>
+    <script src="app.js?v=34"></script>
 </body>
 </html>

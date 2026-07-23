@@ -272,8 +272,12 @@ input[type="number"]:focus, select:focus {
 }
 
 select option {
-    background-color: var(--bg-secondary);
+    background: var(--bg-secondary);
     color: var(--text-primary);
+}
+
+select:invalid, select option[value=""] {
+    color: var(--text-muted);
 }
 
 /* Checkboxes */

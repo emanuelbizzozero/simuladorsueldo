@@ -131,10 +131,11 @@ function init() {
     btnLimpiar.addEventListener('click', () => {
         selectCategoria.value = '';
         inputAntiguedad.value = '';
-        selectTitulo.value = 'ninguno';
-        selectPresentismo.value = 'no';
-        selectPermanencia.value = '0';
-        inputAdicionalFuncion.value = 'no';
+        selectTitulo.value = '';
+        selectPresentismo.value = '';
+        selectPermanencia.value = '';
+        inputAdicionalFuncion.value = '';
+        document.getElementById('adic-turno').checked = false;
         inputDasFamiliar.value = '';
         inputComidaDias.value = '';
         checkboxesSindicato.forEach(cb => cb.checked = false);
@@ -581,8 +582,8 @@ function renderList(listElement, items) {
 }
 
 function renderEmptyStates() {
-    listRemuneracion.innerHTML = '<li class="empty-state">Ingrese los datos para iniciar el cálculo.</li>';
-    listDescuentos.innerHTML = '<li class="empty-state">Ingrese los datos para iniciar el cálculo.</li>';
+    listRemuneracion.innerHTML = '';
+    listDescuentos.innerHTML = '';
     textSubtotalRemunerativo.textContent = '$ 0.00';
     textSubtotalDescuentos.textContent = '$ 0.00';
     textTotalNeto.textContent = '$ 0.00';
