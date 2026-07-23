@@ -129,18 +129,23 @@ function init() {
     });
 
     btnLimpiar.addEventListener('click', () => {
-        selectCategoria.value = '';
+        selectCategoria.selectedIndex = 0;
         inputAntiguedad.value = '';
-        selectTitulo.value = '';
-        selectPresentismo.value = '';
-        selectPermanencia.value = '';
+        selectTitulo.selectedIndex = 0;
+        selectPresentismo.selectedIndex = 0;
+        selectPermanencia.selectedIndex = 0;
         inputAdicionalFuncion.value = '';
         document.getElementById('adic-turno').checked = false;
         inputDasFamiliar.value = '';
         inputComidaDias.value = '';
         checkboxesSindicato.forEach(cb => cb.checked = false);
         
-        calculateSalary();
+        document.querySelectorAll('#dynamic-inputs-container input').forEach(inp => {
+            if (inp.type === 'checkbox') inp.checked = false;
+            else inp.value = '';
+        });
+
+        renderEmptyStates();
     });
 
     // Setup Admin Panel and defaults
